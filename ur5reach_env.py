@@ -71,6 +71,39 @@ class Ur5ReachEnv(gym.Env):
             done=True
             
         return state, reward, done
+    
+        def stepQLearning(self, action, target1, a1_prec, a2_prec, a3_prec, a4_prec):
+        self.user_yaw = p.readUserDebugParameter(self.camera_yaw)
+        self.user_pitch = p.readUserDebugParameter(self.camera_pitch)
+        self.user_distance = p.readUserDebugParameter(self.camera_distance)
+        p.resetDebugVisualizerCamera( cameraDistance=2.5, cameraYaw=210, cameraPitch=-150, cameraTargetPosition=[0,0.5,1])
+
+        self.take_action(action, a1_prec, a2_prec, a3_prec, a4_prec)
+        
+        stateQLearning = self.stateQLearning(action, a1_prec, a2_prec, a3_prec, a4_prec)
+        distance = self._distance_to_target(target1)
+        
+        if distance > self.too_far:
+            reward = -1
+
+        elif distance > self.limit_distance:
+            reward = self.reward_from_distance(distance)
+            print(reward)
+            
+        elif distance < self.limit_distance: 
+            reward = self.goal_reward
+            print(reward)
+            print("---------------------------------------------------")
+
+        done=False    
+    
+        
+        if reward>9:
+            print(reward)
+            print(distance)
+            done=True
+
+        return stateQLearning, reward, done 
         
     def step_simu(self):
         for i in range(1, 400):
@@ -148,6 +181,18 @@ class Ur5ReachEnv(gym.Env):
 
     def reward_from_distance(self, distance):
         return 0.8/(distance)
+    
+        def stateQLearning(self, action, a1_prec, a2_prec, a3_prec, a4_prec):
+        s=[]
+        for i in range(1):
+            for j in [-1.8, -1.56, -1.32, -1.08, -0.84, -0.6, -0.36, -0.12, 0.12, 0.36, 0.6, 0.84, 1.08, 1.32, 1.56, 1.8]:
+                for k in [-1.3, -1.2, -1.1, -0.9, -0.8, -0.7, -0.6, -0.5, -0.4, -0.3]:
+                    for l in [0.8, 0.935, 1.07, 1.205, 1.34, 1.475, 1.61, 1.745, 1.88, 2.015, 2.15]:
+                        for m in [-0.5, -1, -1.5, -2]:
+                            s.insert(i,(j,k,l,m))
+        
+        stateQLearning = s.index(self.take_action(action, a1_prec, a2_prec, a3_prec, a4_prec))
+        return stateQLearning 
 
     def state(self):
         state = (p.getJointState(self.robot_id,1)[0], p.getJointState(self.robot_id,2)[0], p.getJointState(self.robot_id,3)[0], p.getJointState(self.robot_id,4)[0])
