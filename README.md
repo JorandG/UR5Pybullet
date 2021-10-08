@@ -135,7 +135,16 @@ A separate network to estimate the target could also be used. This target networ
 
 # Pybullet
 
+In this link you can find a guide to install Pybullet and the necessary functions to use it:
+
   [Pybullet Quickstart guide](https://docs.google.com/document/d/10sXEhzFRSnvFcl3XxNGhnD4N2SedqwdAvK3dsihxVUA/edit#heading=h.2ye70wns7io3)
+  
+I would also recommand this article in which you can learn how to manipulate Pybullet with Openai gym:
+
+[Creating OpenAI Gym Environments with PyBullet](https://gerardmaggiolino.medium.com/creating-openai-gym-environments-with-pybullet-part-2-a1441b9a4d8e)
+
+
+
   
 # OpenAi Gym
 
